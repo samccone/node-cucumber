@@ -3,7 +3,7 @@ Integration Testing With Node
 
 ```$ npm install```
 
-```$ ./node_modules/.bin/cucumber.js```
+```$ ./node_modules/.bin/cucumber.js -r step_definitions```
 
 
 [Cucumber.js docs](https://github.com/cucumber/cucumber-js)
