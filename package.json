@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "cucumber": "latest",
+    "selenium-webdriver": "latest",
+    "coffee-script": "~1.6.3"
+  }
+}
