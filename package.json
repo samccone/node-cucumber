@@ -2,6 +2,7 @@
   "dependencies": {
     "cucumber": "latest",
     "selenium-webdriver": "latest",
+    "backbone.marionette": "latest",
     "coffee-script": "~1.6.3"
   }
 }
