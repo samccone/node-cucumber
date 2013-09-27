@@ -1,8 +1,8 @@
 _World = null
 
 class Google
-  lookup: ->
-    _World.Driver.find('id', 'viewport')
+  lookup: (cb) ->
+    _World.Driver.find('#viewport', cb)
 
 module.exports = (World) ->
   _World = World

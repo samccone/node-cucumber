@@ -1,8 +1,12 @@
 {
   "dependencies": {
     "cucumber": "latest",
-    "selenium-webdriver": "latest",
-    "backbone.marionette": "latest",
+    "webdriverjs": "~0.7.13",
+    "when": "~2.4.0",
+    "selenium-launcher": "~1.1.7",
     "coffee-script": "~1.6.3"
+  },
+  "scripts": {
+    "cucumber": "./node_modules/.bin/cucumber.js -r step_definitions"
   }
 }

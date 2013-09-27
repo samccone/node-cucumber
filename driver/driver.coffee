@@ -1,34 +1,68 @@
+$      = require('when')
+Assert = require('assert')
+
 class Driver
-  webdriver  = require('selenium-webdriver')
-  @_driver   = null
+  webdriverjs = require('webdriverjs')
+  seleniumLauncher = require('selenium-launcher')
 
-  ### Potential Scopes
-    className
-    'class name'
-    css
-    id
-    js
-    linkText
-    'link text'
-    name
-    partialLinkText
-    'partial link text'
-    tagName
-    'tag name'
-    xpath
-  ###
-  @find: (scope, selector) ->
-    @_driver.findElement(webdriver.By[scope](selector))
+  constructor: (host, port) ->
+    @host     = host
+    @port     = port
+    @_driver  = null
+    @
 
-  @findOne: @find
+  pageReady: (cb) ->
+    @_driver.getTitle(cb)
 
-  @build: ->
-    @_driver = new webdriver.Builder().withCapabilities(webdriver.Capabilities.chrome()).build()
+  find: (selector, cb) ->
+    @_driver.isVisible selector, (err, found) ->
+      Assert.equal found, true, "the #{selector} element is not visible"
+      cb()
 
-  @quit: ->
-    @_driver.quit()
+  findAll: (selector, cb) ->
+    @_driver.elements 'css selector', selector, cb
 
-  @visit: (path) ->
-    @_driver.get(path)
+  get: (selector) ->
+    deferred = $.defer()
+    @_driver.getValue selector, (e, d) ->
+      if e
+        deferred.reject(e)
+      else
+        deferred.resolve(d)
+
+    deferred.promise
+
+  set: (selector, value, cb) ->
+    deferred = $.defer()
+    @_driver.setValue selector, value, -> deferred.resolve()
+    deferred.promise
+
+  click: (selector, cb) ->
+    @_driver.click selector, cb
+
+  build: (cb) ->
+    seleniumLauncher (e, selenium) =>
+      @_driver = webdriverjs.remote
+        port: selenium.port
+        host: selenium.host
+        desiredCapabilities:
+          browserName: 'chrome'
+      @_driver.init cb
+
+  refresh: (cb) ->
+    @_driver.refresh cb
+
+  quit: (cb) ->
+    @_driver.end cb
+
+  visit: (path, cb) ->
+    if @host? and @port?
+      composedPath = "#{@host}:#{@port}#{path}"
+    else
+      composedPath = path
+
+    @_driver.url composedPath, =>
+      # waits for the page to have a title (thus fully loaded)
+      @pageReady cb
 
 module.exports = Driver
